@@ -1,87 +1,32 @@
-const fs = require('fs');
+// config/credentials-config.js
 const path = require('path');
-
-/**
- * Credentials Configuration Module (standalone repo: credentials at repo_root/credentials)
- */
-const CREDENTIALS_DIR = path.join(__dirname, '..', 'credentials');
+const fs = require('fs');
 
 function getGoogleSheetsCredentials() {
-  const credPath = path.join(CREDENTIALS_DIR, 'google-sheets-service-account.json');
-
+  const fromEnv =
+    process.env.GOOGLE_SHEETS_CLIENT_EMAIL && process.env.GOOGLE_SHEETS_PRIVATE_KEY;
+  if (fromEnv) {
+    return {
+      type: 'service_account',
+      project_id: process.env.GOOGLE_SHEETS_PROJECT_ID || '',
+      client_email: process.env.GOOGLE_SHEETS_CLIENT_EMAIL,
+      private_key: process.env.GOOGLE_SHEETS_PRIVATE_KEY.replace(/\\n/g, '\n'),
+    };
+  }
+  const credPath = path.resolve(process.cwd(), 'credentials', 'google-sheets-service-account.json');
   if (!fs.existsSync(credPath)) {
     throw new Error(
-      `Google Sheets credentials not found at: ${credPath}\n` +
-      `Please copy your service account JSON file to: ${CREDENTIALS_DIR}/google-sheets-service-account.json`
+      'Google Sheets credentials not found. Set GOOGLE_SHEETS_CLIENT_EMAIL and GOOGLE_SHEETS_PRIVATE_KEY in .env, ' +
+      'or place google-sheets-service-account.json in credentials/'
     );
   }
-
-  try {
-    const credentialsRaw = fs.readFileSync(credPath, 'utf8');
-    const credentials = JSON.parse(credentialsRaw);
-
-    const requiredFields = ['type', 'project_id', 'private_key', 'client_email'];
-    const missingFields = requiredFields.filter(field => !credentials[field]);
-
-    if (missingFields.length > 0) {
-      throw new Error(`Invalid credentials file. Missing fields: ${missingFields.join(', ')}`);
-    }
-
-    return credentials;
-  } catch (error) {
-    if (error instanceof SyntaxError) {
-      throw new Error(`Invalid JSON in credentials file: ${credPath}`);
-    }
-    throw error;
-  }
+  const raw = JSON.parse(fs.readFileSync(credPath, 'utf8'));
+  return {
+    type: raw.type || 'service_account',
+    project_id: raw.project_id || '',
+    client_email: raw.client_email,
+    private_key: raw.private_key,
+  };
 }
 
-function getServiceAccountEmail() {
-  const credentials = getGoogleSheetsCredentials();
-  return credentials.client_email;
-}
-
-function validateCredentials() {
-  try {
-    const credentials = getGoogleSheetsCredentials();
-    console.log('✅ Google Sheets credentials validated successfully');
-    console.log(`📧 Service Account: ${credentials.client_email}`);
-    return true;
-  } catch (error) {
-    console.error('❌ Credential validation failed:', error.message);
-    throw error;
-  }
-}
-
-function getAnthropicApiKey() {
-  const keyPath = path.join(CREDENTIALS_DIR, 'anthropic-api-key.txt');
-  if (!fs.existsSync(keyPath)) {
-    throw new Error(`Anthropic API key not found at: ${keyPath}`);
-  }
-  return fs.readFileSync(keyPath, 'utf8').trim();
-}
-
-function getBrevoApiKey() {
-  const keyPath = path.join(CREDENTIALS_DIR, 'brevo-api-key.txt');
-  if (!fs.existsSync(keyPath)) {
-    throw new Error(`Brevo API key not found at: ${keyPath}`);
-  }
-  return fs.readFileSync(keyPath, 'utf8').trim();
-}
-
-function getSerpApiKey() {
-  const keyPath = path.join(CREDENTIALS_DIR, 'serpapi-key.txt');
-  if (!fs.existsSync(keyPath)) {
-    throw new Error(`SerpAPI key not found at: ${keyPath}`);
-  }
-  return fs.readFileSync(keyPath, 'utf8').trim();
-}
-
-module.exports = {
-  getGoogleSheetsCredentials,
-  getServiceAccountEmail,
-  validateCredentials,
-  getAnthropicApiKey,
-  getBrevoApiKey,
-  getSerpApiKey
-};
+module.exports = { getGoogleSheetsCredentials };
