@@ -45,8 +45,20 @@ Do **not** commit **`.env`** or **`credentials/`**; they are in **`.gitignore`**
 
 ### 2.3 Google Sheet
 
+**Option A: Use Google Apps Script (recommended)**
+
+- Copy the function from **`createSpeakingOpportunitiesSheet.gs`** into a new Google Apps Script project.
+- Run `createSpeakingOpportunitiesSheet()` to automatically create the sheet with all required tabs, columns, formatting, and formulas.
+- The deployment ID is: `AKfycbzqyVHzSJKs6Fauj8sjaFBb5YzuueBcfmFa-GacNVC8zxetA2rOY08EsaZs56UwG-gD`
+- Share the created sheet with the service account email from your credentials JSON.
+
+**Option B: Manual setup**
+
 - Create a Google Sheet and share it with the service account email from the JSON.
 - Create the sheets and columns expected by the scripts (see **METRICS_SHEET_SETUP.md** and **scripts/README.md**).
+
+**After setup:**
+
 - Put the Sheet ID into **`SPREADSHEET_ID`** in **`.env`** and in the **SPREADSHEET_ID** GitHub secret.
 
 ---

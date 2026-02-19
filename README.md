@@ -23,6 +23,8 @@ This repo also includes **12 Node.js scripts** (one per workflow) in `scripts/`.
 
 ## Google Sheets Structure
 
+**Quick setup:** Use the Google Apps Script function `createSpeakingOpportunitiesSheet()` (see **`createSpeakingOpportunitiesSheet.gs`**) to automatically create the sheet with all tabs, columns, formatting, and formulas. Deployment ID: `AKfycbzqyVHzSJKs6Fauj8sjaFBb5YzuueBcfmFa-GacNVC8zxetA2rOY08EsaZs56UwG-gD`
+
 ### Sheet 1: "Opportunities"
 Columns: event_name (A), event_type (B), industry (C), event_date (D), location (E), format (F), website (G), cfp_deadline (H), speaker_app_link (I), past_speakers (J), attendance (K), audience_type (L), organizer_name (M), organizer_email (N), organizer_linkedin (O), score (P), status (Q), contacted_date (R), last_activity (S), response (T), notes (U), pitch_subject (V), pitch_body (W), recommended_topic (X), follow_up_count (Y), last_follow_up_date (Z), responded_date (AA)
 
