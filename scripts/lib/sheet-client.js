@@ -1,11 +1,17 @@
 /**
  * Shared Google Sheets client for speaking workflow scripts.
- * Loads credentials from aiAgents/config and env SPREADSHEET_ID.
+ * Loads credentials from config/ (repo root) and env SPREADSHEET_ID.
  */
 const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '../../../.env') });
-const { getGoogleSheetsCredentials } = require('../../../config/credentials-config');
+
+// .env at repo root (works when cwd is repo root in CI or when run from app dir locally)
+const envPath = path.resolve(process.cwd(), '.env');
+require('dotenv').config({ path: envPath });
+
+const configPath = path.resolve(process.cwd(), 'config', 'credentials-config');
+const { getGoogleSheetsCredentials } = require(configPath);
 const { GoogleSpreadsheet } = require('google-spreadsheet');
+const { JWT } = require('google-auth-library');
 
 let doc = null;
 
@@ -13,12 +19,17 @@ async function getDoc() {
   if (doc) return doc;
   const spreadsheetId = process.env.SPREADSHEET_ID;
   if (!spreadsheetId || spreadsheetId === 'PASTE_YOUR_SPREADSHEET_ID_HERE') {
-    throw new Error('Set SPREADSHEET_ID in aiAgents/.env to your Google Sheet ID');
+    throw new Error('Set SPREADSHEET_ID in .env to your Google Sheet ID');
   }
-  const credentials = getGoogleSheetsCredentials();
-  doc = new GoogleSpreadsheet(spreadsheetId);
-  await doc.useServiceAccountAuth(credentials);
-  await doc.loadInfo();
+  const creds = getGoogleSheetsCredentials();
+  const serviceAccountAuth = new JWT({
+    email: creds.client_email,
+    key: creds.private_key,
+    scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+  });
+  const newDoc = new GoogleSpreadsheet(spreadsheetId, serviceAccountAuth);
+  await newDoc.loadInfo();
+  doc = newDoc;
   return doc;
 }
 
