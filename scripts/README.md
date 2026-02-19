@@ -1,19 +1,19 @@
 # Speaking Workflow Scripts (Node.js)
 
-One script per automation workflow. Run from `aiAgents/workflows-speaking` after `npm install`.
+One script per automation workflow. Run from the project root (`workflows-speaking-production/`) after `npm install`.
 
 ## Prerequisites
 
-1. **Google Sheet** created from `aiAgents/speaking-sheets-import/` (import CSVs per `import-instructions.md`).
-2. **Credentials**: `aiAgents/credentials/google-sheets-service-account.json` (see `aiAgents/config/test-credentials.js`).
-3. **Env**: In `aiAgents/.env` set:
+1. **Google Sheet** – Create via `createSpeakingOpportunitiesSheet.gs` or manually with tabs: Opportunities, Follow-Up Log, Response Log, Error Log.
+2. **Credentials**: `credentials/google-sheets-service-account.json` in project root (or set `GOOGLE_SHEETS_CLIENT_EMAIL` and `GOOGLE_SHEETS_PRIVATE_KEY` in `.env`).
+3. **Env**: In `.env` at project root set:
    - `SPREADSHEET_ID` – your Google Sheet ID (from the sheet URL: `/d/SPREADSHEET_ID/edit`).
    - Optional: `SERPAPI_API_KEY`, `ANTHROPIC_API_KEY`, `BREVO_API_KEY`, `SENDER_EMAIL`, `MAX_DAILY_EMAILS=10`.
 
 ## Run a workflow
 
 ```bash
-cd aiAgents/workflows-speaking
+cd /path/to/workflows-speaking-production
 npm install
 npm run 01   # Conference Hunter
 npm run 02   # University Prospector

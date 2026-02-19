@@ -5,6 +5,9 @@
   "type": "commonjs",
   "main": "scripts/01-conference-hunter.js",
   "scripts": {
+    "10": "node scripts/10-post-speaking-leverage.js",
+    "11": "node scripts/11-follow-up-sequence.js",
+    "12": "node scripts/12-response-parser.js",
     "01": "node scripts/01-conference-hunter.js",
     "02": "node scripts/02-university-prospector.js",
     "03": "node scripts/03-podcast-finder.js",
@@ -13,14 +16,14 @@
     "06": "node scripts/06-event-quality-scorer.js",
     "07": "node scripts/07-pitch-writer.js",
     "08": "node scripts/08-email-outreach.js",
-    "09": "node scripts/09-linkedin-sequence.js",
-    "10": "node scripts/10-post-speaking-leverage.js",
-    "11": "node scripts/11-follow-up-sequence.js",
-    "12": "node scripts/12-response-parser.js"
+    "09": "node scripts/09-linkedin-sequence.js"
   },
-  "engines": { "node": ">=18" },
+  "engines": {
+    "node": ">=18"
+  },
   "dependencies": {
     "dotenv": "^16.4.5",
+    "google-auth-library": "^9.15.1",
     "google-spreadsheet": "^4.1.0"
   },
   "optionalDependencies": {

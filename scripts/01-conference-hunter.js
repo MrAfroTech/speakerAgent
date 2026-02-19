@@ -16,7 +16,7 @@ const QUERIES = [
 
 async function searchConferences() {
   if (!SERPAPI_KEY) {
-    console.warn('SERPAPI_API_KEY not set; skipping search. Set in aiAgents/.env');
+    console.warn('SERPAPI_API_KEY not set; skipping search. Set in .env');
     return [];
   }
   const results = [];

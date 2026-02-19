@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Set GitHub Actions secrets. Sources aiAgents/.env so SPREADSHEET_ID and keys are used.
-# Add SPREADSHEET_ID to aiAgents/.env (get it from SpreadsheetApp.getActiveSpreadsheet().getId() in Apps Script).
-ENV_FILE="${BASH_SOURCE%/*}/../.env"
+# Set GitHub Actions secrets. Sources .env from project root (workflows-speaking-production/).
+# Run from project root. Add SPREADSHEET_ID to .env (or get from SpreadsheetApp.getActiveSpreadsheet().getId() in Apps Script).
+ENV_FILE="${BASH_SOURCE%/*}/.env"
 if [[ -f "$ENV_FILE" ]]; then
   set -a
   source "$ENV_FILE"

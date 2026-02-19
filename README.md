@@ -1,6 +1,8 @@
-# Speaking Opportunities Prospecting System - n8n Workflows
+# Speaking Opportunities Prospecting System
 
-This directory contains automated workflows for discovering and pursuing speaking opportunities for thought leadership in hospitality technology.
+**Project root:** This directory (`workflows-speaking-production/`). Run all commands and scripts from here. Paths for `.env`, `credentials/`, and `config/` are relative to this root (local and GitHub Actions).
+
+Automated workflows for discovering and pursuing speaking opportunities for thought leadership in hospitality technology.
 
 ## Workflow Overview
 
