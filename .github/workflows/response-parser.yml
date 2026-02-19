@@ -1,0 +1,19 @@
+# Response parser (script 12) – placeholder.
+# Gmail integration not implemented yet; enable when ready.
+name: Response parser
+
+on:
+  workflow_dispatch:
+
+jobs:
+  response-parser:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Placeholder – Gmail not implemented
+        run: |
+          echo "Response parser (script 12) is not yet wired to Gmail."
+          echo "When Gmail integration is ready, add: Create .env from secrets, npm ci, node scripts/12-response-parser.js"
+          exit 0

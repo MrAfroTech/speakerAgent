@@ -1,0 +1,52 @@
+# Daily outreach: pitch writer and email outreach.
+# Schedule: Daily 9:00 AM UTC
+name: Daily outreach
+
+on:
+  schedule:
+    - cron: '0 9 * * *'
+  workflow_dispatch:
+
+jobs:
+  outreach:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: aiAgents/workflows-speaking-production/package-lock.json
+
+      - name: Create credentials directory and service account file
+        env:
+          GOOGLE_JSON: ${{ secrets.GOOGLE_SHEETS_SERVICE_ACCOUNT_JSON }}
+        run: |
+          mkdir -p aiAgents/credentials
+          printf '%s\n' "$GOOGLE_JSON" > aiAgents/credentials/google-sheets-service-account.json
+
+      - name: Create .env from secrets
+        run: |
+          echo "SPREADSHEET_ID=${{ secrets.SPREADSHEET_ID }}" >> aiAgents/.env
+          echo "BREVO_API_KEY=${{ secrets.BREVO_API_KEY }}" >> aiAgents/.env
+          echo "ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }}" >> aiAgents/.env
+          echo "SERPAPI_API_KEY=${{ secrets.SERPAPI_API_KEY }}" >> aiAgents/.env
+
+      - name: Install dependencies
+        working-directory: aiAgents/workflows-speaking-production
+        run: npm ci
+
+      - name: Run outreach scripts (07–08)
+        working-directory: aiAgents/workflows-speaking-production
+        run: |
+          node scripts/07-pitch-writer.js
+          node scripts/08-email-outreach.js
+
+      - name: Cleanup secrets
+        if: always()
+        run: |
+          rm -f aiAgents/.env
+          rm -f aiAgents/credentials/google-sheets-service-account.json
