@@ -28,7 +28,19 @@ async function getDoc() {
     scopes: ['https://www.googleapis.com/auth/spreadsheets'],
   });
   const newDoc = new GoogleSpreadsheet(spreadsheetId, serviceAccountAuth);
-  await newDoc.loadInfo();
+  try {
+    await newDoc.loadInfo();
+  } catch (err) {
+    const is404 = err.response?.status === 404 || err.message?.includes('404');
+    if (is404) {
+      throw new Error(
+        `Google Sheets 404: Spreadsheet not found. ` +
+        `1) Check SPREADSHEET_ID (current: ${spreadsheetId}). ` +
+        `2) Share the sheet with the service account: ${creds.client_email}`
+      );
+    }
+    throw err;
+  }
   doc = newDoc;
   return doc;
 }
@@ -47,13 +59,18 @@ function rowToOpportunity(headers, values) {
   return row;
 }
 
-/** Append one row to Error Log sheet */
+/** Append one row to Error Log sheet (skips if sheet is unreachable, e.g. 404) */
 async function logError(workflowName, errorMessage) {
   try {
+    const msg = String(errorMessage);
+    if (msg.includes('404') || msg.includes('Spreadsheet not found')) {
+      console.error(`[${workflowName}]`, msg);
+      return;
+    }
     const sheet = await getSheet('Error Log');
     await sheet.addRow({
       workflow: workflowName,
-      error: String(errorMessage).slice(0, 500),
+      error: msg.slice(0, 500),
       timestamp: new Date().toISOString().replace('T', ' ').slice(0, 19),
     });
   } catch (e) {

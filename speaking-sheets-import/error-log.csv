@@ -1,0 +1,3 @@
+workflow,error,timestamp
+"Workflow 04 - Association Scanner","Failed to fetch URL: https://nraef.org/events - Connection timeout",2025-02-18 14:32:15
+"Workflow 08 - Email Outreach","Invalid email address format: jane@incomplete",2025-02-18 09:15:42

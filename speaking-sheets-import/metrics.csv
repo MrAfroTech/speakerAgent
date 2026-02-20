@@ -1,0 +1,27 @@
+Metric,Value,Formula Notes
+PIPELINE METRICS,,
+Total Opportunities,=COUNTA(Opportunities!A:A)-1,Counts all rows minus header
+By Source - Conference,=COUNTIF(Opportunities!P:P,"Conference"),,
+By Source - University,=COUNTIF(Opportunities!P:P,"University"),,
+By Source - Podcast,=COUNTIF(Opportunities!P:P,"Podcast"),,
+By Source - Association,=COUNTIF(Opportunities!P:P,"Association"),,
+,,
+Status - New,=COUNTIF(Opportunities!N:N,"New"),,
+Status - Qualified,=COUNTIF(Opportunities!N:N,"Qualified"),,
+Status - Contacted,=COUNTIF(Opportunities!N:N,"Contacted"),,
+Status - Interested,=COUNTIF(Opportunities!N:N,"Interested"),,
+Status - Declined,=COUNTIF(Opportunities!N:N,"Declined"),,
+Status - Booked,=COUNTIF(Opportunities!N:N,"Booked"),,
+Status - No Response,=COUNTIF(Opportunities!N:N,"No Response"),,
+,,
+PERFORMANCE METRICS,,
+Response Rate,=IFERROR((COUNTIF(Opportunities!N:N,"Interested")+COUNTIF(Opportunities!N:N,"Declined"))/COUNTIF(Opportunities!N:N,"Contacted"),0),Format as percentage
+Conversion Rate,=IFERROR(COUNTIF(Opportunities!N:N,"Booked")/COUNTIF(Opportunities!N:N,"Contacted"),0),Format as percentage
+Average Quality Score,=IFERROR(AVERAGE(Opportunities!O:O),0),,
+,,
+ACTIVITY METRICS,,
+Opportunities This Week,=COUNTIFS(Opportunities!Q:Q,">="&TODAY()-7,Opportunities!Q:Q,"<="&TODAY()),,
+Pitches Sent This Week,=COUNTIFS(Opportunities!R:R,">="&TODAY()-7,Opportunities!R:R,"<="&TODAY()),,
+Follow-Ups This Week,=COUNTIFS('Follow-Up Log'!C:C,">="&TODAY()-7,'Follow-Up Log'!C:C,"<="&TODAY()),Note: Update sheet name if different
+,,
+Last Updated,=NOW(),Auto-updates when sheet recalculates
