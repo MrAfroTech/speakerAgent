@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * Workflow 06: Event Quality Scorer
- * Reads opportunities with contact and no score; scores 0-25 (audience, type, fit, CFP); sets status (High Priority / Qualified / etc.).
+ * Scores any opportunity with no quality_score yet (independent of organizer_email).
+ * Scores 0-25 (audience, type, fit, CFP); sets status (High Priority / Qualified / etc.).
  */
 require('./lib/load-env');
 const { getSheet, logError } = require('./lib/sheet-client');
@@ -45,8 +46,6 @@ async function main() {
   for (const row of rows) {
     const currentScore = row.get('quality_score');
     if (currentScore !== '' && currentScore !== undefined && currentScore !== null) continue;
-    const email = row.get('organizer_email');
-    if (!email) continue;
 
     const { score, status } = scoreOpportunity(row);
     row.set('quality_score', score);
