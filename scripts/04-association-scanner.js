@@ -29,7 +29,6 @@ async function main() {
   console.log('Workflow 04: Association Scanner');
   const sheet = await getSheet('Opportunities');
   await sheet.loadHeaderRow();
-  const today = new Date().toISOString().slice(0, 10);
   let added = 0;
 
   for (const assoc of ASSOCIATIONS) {
@@ -38,34 +37,15 @@ async function main() {
       console.warn(`Could not fetch events for ${assoc.name}`);
       continue;
     }
+    // Sheet header: Conference_Name, Date, Location, URL, Status, Notes (exact match required)
+    const description = `Events and programs from ${assoc.name}. Check ${assoc.url}/events for current listings.`;
     await sheet.addRow({
-      id: sheet.rowCount + 1,
-      event_name: `${assoc.name} - Events`,
-      event_type: 'Association',
-      event_date: '',
-      location: '',
-      url: assoc.url,
-      description: `Events and programs from ${assoc.name}. Check ${assoc.url}/events for current listings.`,
-      organizer_name: '',
-      organizer_email: '',
-      organizer_linkedin: '',
-      organizer_title: '',
-      audience_size: '',
-      audience_type: 'association members, industry',
-      status: 'New',
-      quality_score: '',
-      source: 'Association Scanner',
-      discovered_date: today,
-      contacted_date: '',
-      notes: '',
-      cfp_deadline: '',
-      submission_requirements: '',
-      pitch_subject: '',
-      pitch_body: '',
-      recommended_topic: '',
-      follow_up_count: 0,
-      last_follow_up_date: '',
-      responded_date: '',
+      Conference_Name: `${assoc.name} - Events`,
+      Date: '',
+      Location: '',
+      URL: assoc.url,
+      Status: 'New',
+      Notes: `Source: Association Scanner. ${description}`,
     });
     added++;
   }

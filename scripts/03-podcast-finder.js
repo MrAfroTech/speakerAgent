@@ -24,40 +24,19 @@ async function main() {
   console.log('Workflow 03: Podcast Finder');
   const sheet = await getSheet('Opportunities');
   await sheet.loadHeaderRow();
-  const today = new Date().toISOString().slice(0, 10);
-  const startCount = sheet.rowCount;
 
+  // Sheet header: Conference_Name, Date, Location, URL, Status, Notes (exact match required)
   const results = await searchPodcasts();
   for (let i = 0; i < Math.min(5, results.length); i++) {
     const r = results[i];
+    const description = (r.snippet || '').slice(0, 500);
     await sheet.addRow({
-      id: startCount + i + 1,
-      event_name: r.title || 'Podcast',
-      event_type: 'Podcast',
-      event_date: '',
-      location: 'Remote',
-      url: r.link,
-      description: (r.snippet || '').slice(0, 500),
-      organizer_name: '',
-      organizer_email: '',
-      organizer_linkedin: '',
-      organizer_title: 'Host',
-      audience_size: '',
-      audience_type: 'podcast audience',
-      status: 'New',
-      quality_score: '',
-      source: 'Podcast Finder',
-      discovered_date: today,
-      contacted_date: '',
-      notes: '',
-      cfp_deadline: 'Rolling',
-      submission_requirements: 'Email introduction with topics',
-      pitch_subject: '',
-      pitch_body: '',
-      recommended_topic: '',
-      follow_up_count: 0,
-      last_follow_up_date: '',
-      responded_date: '',
+      Conference_Name: r.title || 'Podcast',
+      Date: '',
+      Location: 'Remote',
+      URL: r.link,
+      Status: 'New',
+      Notes: description ? `Source: Podcast Finder. ${description}` : 'Source: Podcast Finder.',
     });
   }
 
