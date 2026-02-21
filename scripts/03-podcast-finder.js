@@ -30,14 +30,16 @@ async function main() {
   for (let i = 0; i < Math.min(5, results.length); i++) {
     const r = results[i];
     const description = (r.snippet || '').slice(0, 500);
-    await sheet.addRow({
+    const row = {
       Conference_Name: r.title || 'Podcast',
       Date: '',
       Location: 'Remote',
       URL: r.link,
       Status: 'New',
       Notes: description ? `Source: Podcast Finder. ${description}` : 'Source: Podcast Finder.',
-    });
+    };
+    await sheet.addRow(row);
+    console.log(`[03] Row saved: ${row.Conference_Name} | URL: ${row.URL}`);
   }
 
   console.log(`Added ${Math.min(5, results.length)} podcast opportunities.`);

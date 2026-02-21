@@ -44,14 +44,16 @@ async function main() {
   for (let i = 0; i < Math.min(5, conferences.length); i++) {
     const c = conferences[i];
     const description = (c.snippet || '').slice(0, 500);
-    await sheet.addRow({
+    const row = {
       Conference_Name: c.title,
       Date: '',
       Location: '',
       URL: c.link,
       Status: 'New',
       Notes: description ? `Source: Conference Hunter. ${description}` : 'Source: Conference Hunter.',
-    });
+    };
+    await sheet.addRow(row);
+    console.log(`[01] Row saved: ${row.Conference_Name} | URL: ${row.URL}`);
   }
 
   console.log(`Added ${Math.min(5, conferences.length)} conference opportunities.`);

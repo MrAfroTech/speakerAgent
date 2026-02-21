@@ -39,14 +39,16 @@ async function main() {
     }
     // Sheet header: Conference_Name, Date, Location, URL, Status, Notes (exact match required)
     const description = `Events and programs from ${assoc.name}. Check ${assoc.url}/events for current listings.`;
-    await sheet.addRow({
+    const row = {
       Conference_Name: `${assoc.name} - Events`,
       Date: '',
       Location: '',
       URL: assoc.url,
       Status: 'New',
       Notes: `Source: Association Scanner. ${description}`,
-    });
+    };
+    await sheet.addRow(row);
+    console.log(`[04] Row saved: ${row.Conference_Name} | URL: ${row.URL}`);
     added++;
   }
 

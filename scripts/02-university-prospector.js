@@ -31,14 +31,16 @@ async function main() {
   for (let i = 0; i < Math.min(5, results.length); i++) {
     const r = results[i];
     const description = (r.snippet || '').slice(0, 500);
-    await sheet.addRow({
+    const row = {
       Conference_Name: r.title || 'University Program',
       Date: '',
       Location: '',
       URL: r.link,
       Status: 'New',
       Notes: description ? `Source: University Prospector. ${description}` : 'Source: University Prospector.',
-    });
+    };
+    await sheet.addRow(row);
+    console.log(`[02] Row saved: ${row.Conference_Name} | URL: ${row.URL}`);
   }
 
   console.log(`Added ${Math.min(5, results.length)} university opportunities.`);

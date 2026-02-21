@@ -45,10 +45,22 @@ async function getDoc() {
   return doc;
 }
 
+let _sheetListLogged = false;
+
 async function getSheet(title) {
   const d = await getDoc();
   const sheet = d.sheetsByTitle[title];
-  if (!sheet) throw new Error(`Sheet "${title}" not found. Create it in your spreadsheet.`);
+  if (!sheet) {
+    const tabList = Object.keys(d.sheetsByTitle).join(', ');
+    throw new Error(`Sheet "${title}" not found. Available tabs: ${tabList}`);
+  }
+  // Log once per process which tab "Opportunities" (or requested sheet) resolves to
+  if (title === 'Opportunities' && !_sheetListLogged) {
+    _sheetListLogged = true;
+    const tabList = Object.keys(d.sheetsByTitle).join(', ');
+    console.log(`[sheet-client] Workbook has ${d.sheetCount} tab(s): ${tabList}`);
+    console.log(`[sheet-client] Resolved "Opportunities" to sheet title: "${sheet.title}", index: ${sheet.index}`);
+  }
   return sheet;
 }
 
