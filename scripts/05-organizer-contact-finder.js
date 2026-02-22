@@ -28,7 +28,7 @@ async function main() {
   console.log(`[05] Opportunities header row: ${JSON.stringify(headerValues)}`);
   console.log(`[05] Using column "${urlHeader}" for URL.`);
 
-  const rows = await oppSheet.getRows();
+  const rows = await oppSheet.getRows({ limit: 10000 });
   const contactsSheet = await getSheet('Contacts').catch(() => null);
 
   const eligible = rows.filter((row) => {

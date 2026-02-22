@@ -35,13 +35,14 @@ async function main() {
   console.log('Workflow 11: Follow-Up Sequence');
   const oppSheet = await getSheet('Opportunities');
   await oppSheet.loadHeaderRow();
-  const rows = await oppSheet.getRows();
+  const rows = await oppSheet.getRows({ limit: 10000 });
 
   const cutoff = new Date();
   cutoff.setDate(cutoff.getDate() - FOLLOW_UP_DAYS);
   const cutoffStr = cutoff.toISOString().slice(0, 10);
 
-  const contacted = rows.filter((r) => (r.get('status') || '') === 'Contacted');
+  const statusVal = (r) => (r.get('Status') ?? r.get('status') ?? '').toString();
+  const contacted = rows.filter((r) => statusVal(r) === 'Contacted');
   const eligible = contacted.filter((r) => {
     const lastContact = r.get('contacted_date') || r.get('last_follow_up_date') || '';
     const count = parseInt(r.get('follow_up_count') || 0, 10);
@@ -67,7 +68,7 @@ async function main() {
       await sendEmail(to, subject, body);
       row.set('follow_up_count', count);
       row.set('last_follow_up_date', today);
-      if (count >= MAX_FOLLOW_UPS) row.set('status', 'No Response');
+      if (count >= MAX_FOLLOW_UPS) row.set('Status', 'No Response');
       await row.save();
 
       await followUpSheet.addRow({

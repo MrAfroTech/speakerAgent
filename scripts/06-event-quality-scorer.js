@@ -40,7 +40,7 @@ async function main() {
   console.log('Workflow 06: Event Quality Scorer');
   const sheet = await getSheet('Opportunities');
   await sheet.loadHeaderRow();
-  const rows = await sheet.getRows();
+  const rows = await sheet.getRows({ limit: 10000 });
 
   let scored = 0;
   for (const row of rows) {
@@ -49,7 +49,7 @@ async function main() {
 
     const { score, status } = scoreOpportunity(row);
     row.set('quality_score', score);
-    row.set('status', status);
+    row.set('Status', status);
     await row.save();
     scored++;
   }

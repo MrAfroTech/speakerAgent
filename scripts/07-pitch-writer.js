@@ -39,16 +39,16 @@ async function main() {
   console.log('Workflow 07: Pitch Writer');
   const sheet = await getSheet('Opportunities');
   await sheet.loadHeaderRow();
-  const rows = await sheet.getRows();
+  const rows = await sheet.getRows({ limit: 10000 });
 
   let written = 0;
   for (const row of rows) {
-    const status = row.get('status') || '';
+    const status = (row.get('Status') ?? row.get('status') ?? '').toString();
     const contacted = row.get('contacted_date');
     const pitchSubject = row.get('pitch_subject');
     if (!/High Priority|Qualified/.test(status) || contacted || pitchSubject) continue;
 
-    const eventName = row.get('event_name') || 'Event';
+    const eventName = row.get('event_name') || row.get('Conference_Name') || 'Event';
     const eventType = row.get('event_type') || '';
     const organizerName = row.get('organizer_name') || '';
     const audienceType = row.get('audience_type') || '';
@@ -57,6 +57,7 @@ async function main() {
     row.set('pitch_subject', subject);
     row.set('pitch_body', body);
     row.set('recommended_topic', topic);
+    row.set('Status', 'Ready to Send');
     await row.save();
     written++;
     if (written >= 5) break;

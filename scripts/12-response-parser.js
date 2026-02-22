@@ -35,7 +35,7 @@ async function main() {
 
   const oppSheet = await getSheet('Opportunities');
   await oppSheet.loadHeaderRow();
-  const rows = await oppSheet.getRows();
+  const rows = await oppSheet.getRows({ limit: 10000 });
   const row = rows.find((r) => String(r.get('id')) === String(opportunityId));
   if (!row) {
     console.error('Opportunity not found:', opportunityId);
@@ -43,7 +43,7 @@ async function main() {
   }
 
   const today = new Date().toISOString().slice(0, 10);
-  row.set('status', newStatus);
+  row.set('Status', newStatus);
   row.set('responded_date', today);
   if (emailSnippet) row.set('notes', (row.get('notes') || '') + '\nResponse: ' + emailSnippet.slice(0, 500));
   await row.save();

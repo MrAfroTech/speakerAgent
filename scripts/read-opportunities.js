@@ -18,7 +18,7 @@ async function main() {
   const sheet = await getSheet('Opportunities');
   await sheet.loadHeaderRow();
   const headers = sheet.headerValues || [];
-  const rows = await sheet.getRows();
+  const rows = await sheet.getRows({ limit: 10000 });
 
   console.log('\n--- SHEET: Opportunities ---');
   console.log('Exact header row (column names):', JSON.stringify(headers));

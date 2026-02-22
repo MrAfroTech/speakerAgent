@@ -33,10 +33,11 @@ async function main() {
   console.log('Workflow 08: Email Outreach');
   const sheet = await getSheet('Opportunities');
   await sheet.loadHeaderRow();
-  const rows = await sheet.getRows();
+  const rows = await sheet.getRows({ limit: 10000 });
 
+  const statusKey = (r) => (r.get('Status') ?? r.get('status') ?? '').toString();
   const ready = rows.filter(
-    (r) => /Ready to Send/.test(r.get('status') || '') && r.get('pitch_subject') && r.get('organizer_email')
+    (r) => /Ready to Send/.test(statusKey(r)) && r.get('pitch_subject') && r.get('organizer_email')
   );
   const toSend = ready.slice(0, MAX_DAILY);
   const today = new Date().toISOString().slice(0, 10);
@@ -50,12 +51,12 @@ async function main() {
 
     try {
       await sendEmail(to, subject, body);
-      row.set('status', 'Contacted');
+      row.set('Status', 'Contacted');
       row.set('contacted_date', today);
       await row.save();
       sent++;
     } catch (e) {
-      row.set('status', 'Send Failed');
+      row.set('Status', 'Send Failed');
       await row.save();
       await logError(WORKFLOW_NAME, `Send to ${to}: ${e.message}`);
     }
